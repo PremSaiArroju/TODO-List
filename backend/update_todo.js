@@ -5,8 +5,9 @@ exports.handler = async (event) => {
     const todoId = event.pathParameters.id;
     const data = JSON.parse(event.body);
 
+    // Update the item in DynamoDB
     const result = await dynamoDB.update({
-        TableName: 'Todos',
+        TableName: 'Todos', // Replace with your DynamoDB table name
         Key: { id: todoId },
         UpdateExpression: "set title = :t, completed = :c",
         ExpressionAttributeValues: {

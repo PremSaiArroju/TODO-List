@@ -4,8 +4,9 @@ const dynamoDB = new AWS.DynamoDB.DocumentClient();
 exports.handler = async (event) => {
     const todoId = event.pathParameters.id;
 
+    // Delete the item from DynamoDB
     await dynamoDB.delete({
-        TableName: 'Todos',
+        TableName: 'Todos', // Replace with your DynamoDB table name
         Key: { id: todoId }
     }).promise();
 
