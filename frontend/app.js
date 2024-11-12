@@ -1,4 +1,4 @@
-const apiUrl = 'YOUR_API_ENDPOINT_HERE'; // Replace with your API Gateway endpoint
+const apiUrl = 'https://upklhowv3m.execute-api.us-east-1.amazonaws.com/dev';  // Replace with your API Gateway endpoint
 
 // Fetch and display todos from the API
 async function getTodos() {
