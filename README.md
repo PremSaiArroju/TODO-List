@@ -5,16 +5,16 @@ This is a serverless Todo application built with AWS services. The backend is po
 ## Project Overview
 
 This project demonstrates the use of AWS serverless technologies to build a simple, scalable, and cost-effective backend for a Todo application. It includes:
-- AWS Lambda functions for backend logic.
-- DynamoDB as the database for storing todo items.
-- API Gateway to expose RESTful endpoints.
-
+- **AWS Lambda** functions for backend logic.
+- **DynamoDB** as the database for storing todo items.
+- **API Gateway** to expose RESTful endpoints with CORS enabled.
+- **Postman or a custom frontend** to interact with the backend.
 
 ## Prerequisites
 
-1. **AWS Account**: You will need an AWS account to set up and run this project.
-2. **Node.js and npm**: For local development, you need Node.js and npm installed.
-3. **AWS CLI**: Optional, but recommended for managing AWS resources from the command line.
+1. **AWS Account**: Required to set up and run AWS resources.
+2. **Node.js and npm**: For local development, if needed.
+3. **AWS CLI**: Optional but recommended for managing AWS resources from the command line.
 4. **Postman**: Optional, for testing API endpoints.
 
 ## Setup and Deployment
@@ -26,17 +26,15 @@ This project demonstrates the use of AWS serverless technologies to build a simp
    - **Table Name**: `Todos`
    - **Primary Key**: `id` (String)
 
-### Step 2: Set Up Lambda Functions
+### Step 2: Set Up Lambda Function with CORS Headers
 
-1. Create four Lambda functions:
-   - `CreateTodo`: Handles creating a new todo item.
-   - `GetTodos`: Retrieves all todo items.
-   - `UpdateTodo`: Updates an existing todo item.
-   - `DeleteTodo`: Deletes a specific todo item.
+1. Create a single Lambda function for handling all CRUD operations (Create, Read, Update, Delete).
+   - Use the provided code, which includes the necessary CORS headers for each response.
+   - Set an environment variable named `TABLE_NAME` with the value `Todos`.
+   - Ensure the Lambda function has IAM permissions to interact with DynamoDB.
 
-2. Use the provided code in each `.js` file and upload them as Lambda functions. Remember to:
-   - Set `TABLE_NAME` as an environment variable for each function, with the value `Todos`.
-   - Ensure each function has permissions to access DynamoDB.
+2. **Lambda Function Code**:
+   - Make sure each response includes CORS headers to handle browser-based requests.
 
 ### Step 3: Configure API Gateway
 
@@ -46,23 +44,35 @@ This project demonstrates the use of AWS serverless technologies to build a simp
    - **GET** `/todos` - Retrieve all todo items.
    - **PUT** `/todos/{id}` - Update a specific todo item by ID.
    - **DELETE** `/todos/{id}` - Delete a specific todo item by ID.
-3. Link each method to the respective Lambda function and enable CORS.
-
+3. Link each method to the respective Lambda function and enable **CORS** for each method:
+   - Enable CORS in API Gateway by selecting **Actions > Enable CORS** for each method, including **OPTIONS**.
 4. **Deploy the API** to a stage (e.g., `dev`) and copy the endpoint URL.
+
+### Step 4: Enable CORS for Gateway Responses (Optional but Recommended)
+
+1. In **API Gateway**, go to **Gateway Responses**.
+2. Edit responses like **Default 4XX** and **Default 5XX** to include CORS headers:
+   - `Access-Control-Allow-Origin` set to `*`
+   - `Access-Control-Allow-Methods` set to `GET,POST,PUT,DELETE,OPTIONS`
+   - `Access-Control-Allow-Headers` set to `Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token`
+3. Redeploy the API to apply these changes.
 
 ## API Endpoints
 
-Once deployed, you can interact with the API endpoints. Replace `your-api-id`, `region`, and `dev` in the URLs with your API’s specific information.
+Once deployed, you can interact with the following API endpoints (replace `your-api-id`, `region`, and `stage` with your API’s specific information):
+
+- **Create Todo**: `POST https://{your-api-id}.execute-api.{region}.amazonaws.com/{stage}/todos`
+- **Retrieve Todos**: `GET https://{your-api-id}.execute-api.{region}.amazonaws.com/{stage}/todos`
+- **Update Todo**: `PUT https://{your-api-id}.execute-api.{region}.amazonaws.com/{stage}/todos/{id}`
+- **Delete Todo**: `DELETE https://{your-api-id}.execute-api.{region}.amazonaws.com/{stage}/todos/{id}`
 
 ## Testing with Postman
 
-	1.	Open Postman.
-	2.	Create a New Request for each CRUD operation and enter the API endpoint and HTTP method.
-	3.	Set the Body for POST and PUT requests with JSON format.
-	4.	Send the Request and view the response in Postman.
+1. Open Postman.
+2. Create a New Request for each CRUD operation and enter the corresponding API endpoint and HTTP method.
+3. Set the Body for **POST** and **PUT** requests with JSON format, e.g., `{ "title": "Your Todo Title" }`.
+4. Send the Request and view the response in Postman.
 
 ## License
 
 This project is open source and available under the MIT License.
-
-This `README.md` file provides a complete overview of the project, instructions for setup and deployment, details on each API endpoint, and guidelines for testing with Postman. You can further customize it as needed for your specific setup or to include additional details.
